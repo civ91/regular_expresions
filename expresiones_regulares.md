@@ -25,10 +25,16 @@ Las expresiones regulares (regex) son una herramienta poderosa para buscar, mani
 
 ```bash
 # Buscar cualquier carácter
-grep 'a.b' archivo.txt
+echo -e "aab\nacb\nab" | grep 'a.b'
 
 # Buscar un punto literal
-grep '\.' archivo.txt
+echo -e "file.txt\nfile1txt" | grep '\.'
+
+# Buscar vocales
+echo "hola mundo" | grep '[aeiou]'
+
+# Buscar caracteres que no sean dígitos
+echo "abc123" | grep '[^0-9]'
 ```
 
 ## Cuantificadores
@@ -43,11 +49,20 @@ grep '\.' archivo.txt
 | `{n,m}`    | Entre `n` y `m` repeticiones                 | `a{1,3}` coincide con `a`, `aa`    |
 
 ```bash
-# Buscar palabras con una o más 'b'
-grep 'ab+' archivo.txt
+# Buscar palabras con cero o más 'b'
+echo -e "a\nab\nabb" | grep 'ab*'
+
+# Buscar una o más 'b'
+echo -e "a\nab\nabb" | grep 'ab+'
 
 # Buscar exactamente 3 'a'
-grep 'a{3}' archivo.txt
+echo -e "aa\naaa\naaaa" | grep 'a{3}'
+
+# Buscar al menos 2 'a'
+echo -e "a\naa\naaa" | grep 'a{2,}'
+
+# Buscar entre 1 y 3 'a'
+echo -e "a\naa\naaa\naaaa" | grep 'a{1,3}'
 ```
 
 ## Grupos y Alternancias
@@ -59,10 +74,10 @@ grep 'a{3}' archivo.txt
 
 ```bash
 # Buscar patrones alternativos
-grep 'cat\|dog' archivo.txt
+echo -e "cat\ndog\nrat" | grep 'cat\|dog'
 
 # Buscar repeticiones de un grupo
-grep '\(abc\)+' archivo.txt
+echo -e "abc\nabcabc\nab" | grep '\(abc\)+'
 ```
 
 ## Anclas
@@ -76,10 +91,16 @@ grep '\(abc\)+' archivo.txt
 
 ```bash
 # Buscar líneas que comienzan con 'abc'
-grep '^abc' archivo.txt
+echo -e "abc\ndef\nabcde" | grep '^abc'
 
 # Buscar líneas que terminan con 'xyz'
-grep 'xyz$' archivo.txt
+echo -e "xyz\nabcxyz\nabc" | grep 'xyz$'
+
+# Buscar palabra completa 'word'
+echo -e "word\nsword\nwords" | grep '\bword\b'
+
+# Buscar 'abc' dentro de palabras
+echo -e "abcde\nsabc" | grep '\Babc'
 ```
 
 ## Clases de Caracteres
@@ -95,10 +116,22 @@ grep 'xyz$' archivo.txt
 
 ```bash
 # Buscar dígitos en el texto
-grep -E '\d+' archivo.txt
+echo -e "abc123\n456" | grep -E '\d+'
+
+# Buscar no dígitos
+echo -e "abc123\n456" | grep -E '\D+'
 
 # Buscar palabras alfanuméricas
-grep -E '\w+' archivo.txt
+echo -e "hola_mundo\n123" | grep -E '\w+'
+
+# Buscar símbolos
+echo -e "@#%\n123" | grep -E '\W+'
+
+# Buscar espacios en blanco
+echo -e "hola mundo" | grep -E '\s+'
+
+# Buscar no espacios en blanco
+echo -e "hola mundo" | grep -E '\S+'
 ```
 
 ## Referencias y Capturas
@@ -109,29 +142,19 @@ grep -E '\w+' archivo.txt
 
 ```bash
 # Buscar caracteres repetidos
-grep -E '(.)\1' archivo.txt
+echo -e "aabb\nabc" | grep -E '(.)\1'
 ```
 
 ## Ejemplos Comunes
 
 1. **Buscar líneas vacías:**
    ```bash
-   grep '^$' archivo.txt
+   echo -e "\nabc\n" | grep '^$'
    ```
 2. **Eliminar espacios en blanco con sed:**
    ```bash
-   sed 's/\s//g' archivo.txt
+   echo "hola mundo" | sed 's/\s//g'
    ```
 3. **Extraer direcciones de correo:**
    ```bash
-   grep -Eo '\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b' archivo.txt
-   ```
-4. **Validar números de teléfono:**
-   ```bash
-   grep -E '^\+?[0-9]{10,15}$' archivo.txt
-   ```
-
-## Recursos Adicionales
-- [Documentación oficial de `grep`](https://www.gnu.org/software/grep/manual/)
-- [Guía de sed](https://www.gnu.org/software/sed/manual/sed.html)
-- [Regex101](https://regex101.com) - Herramienta interactiva para probar regex.
+   echo "correo@ejemplo.com texto" | grep -Eo '\b[A-Za-z0-9
